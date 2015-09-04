@@ -43,7 +43,7 @@ public class Client {
             String alamatServer = JOptionPane.showInputDialog(
                     gui,
                     "Masukkan alamat IP server :",
-                    "Selamat datang di server kuis",
+                    "Selamat datang di chatting server",
                     JOptionPane.QUESTION_MESSAGE);
             
             Socket socket = new Socket(alamatServer, 9091);

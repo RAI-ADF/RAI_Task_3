@@ -32,7 +32,7 @@ public class ClientGUI extends javax.swing.JFrame {
         dataField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Quiz Client");
+        setTitle("Chatting Client");
 
         messageArea.setEditable(false);
         messageArea.setColumns(20);

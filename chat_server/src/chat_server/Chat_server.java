@@ -17,6 +17,8 @@ public class Chat_server {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        server_frame server = new server_frame();
+        server.setVisible(true);        
     }
     
 }

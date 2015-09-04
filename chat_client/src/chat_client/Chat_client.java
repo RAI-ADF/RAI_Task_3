@@ -17,6 +17,8 @@ public class Chat_client {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        client_frame client = new client_frame();
+        client.setVisible(true);
     }
     
 }

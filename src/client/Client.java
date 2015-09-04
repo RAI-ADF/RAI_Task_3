@@ -1,7 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * RAI Task 3 - Socket Programming
+ *
+ * Dieka Nugraha Karyana
+ * 1103120057
  */
 package client;
 
@@ -12,8 +13,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -71,6 +70,7 @@ public class Client {
 
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(gui, ex.toString(), "Terjadi Kesalahan ! ", JOptionPane.ERROR_MESSAGE);
+            gui.dispose();
         }
     }
 

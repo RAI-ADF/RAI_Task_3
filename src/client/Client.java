@@ -5,8 +5,6 @@
  */
 package client;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -23,72 +21,66 @@ import javax.swing.JTextField;
  * @author TOSHIBA
  */
 public class Client {
-    
+
     private BufferedReader in;
     private PrintWriter out;
     private ClientGUI gui = new ClientGUI();
     private JTextField dataField = gui.getDataField();
     private JTextArea messageArea = gui.getMessageArea();
-    
-    public Client(){
+
+    public Client() {
         dataField.addActionListener(new ActionListener() {
 
+            @Override
             public void actionPerformed(ActionEvent ae) {
                 out.println(dataField.getText());
-                String response;
-                
-                try{
-                    response = in.readLine();
-                    if(response.startsWith("MESSAGE")){
-                        messageArea.append(response.substring(8) + "\n");
-                        response = in.readLine();
-                    }
-                    if(response == null || response.equals("")){
-                        System.exit(0);
-                    }
-                } catch (IOException e){
-                    response = "Error : " + e;
-                }
-                
-                messageArea.append(response + "\n");
-                dataField.selectAll();
             }
         });
     }
-    
-    public void connectToServer() throws IOException{
-        String alamatServer = JOptionPane.showInputDialog(
-            gui,
-            "Masukkan alamat IP server :",
-            "Selamat datang di server kuis",
-            JOptionPane.QUESTION_MESSAGE);
-        
-        Socket socket = new Socket(alamatServer, 9091);
-        in = new BufferedReader(
-                new InputStreamReader(socket.getInputStream()));
-        out = new PrintWriter(socket.getOutputStream(), true);
-        
-        for (int i = 0; i < 5; i++) {
-            messageArea.append(in.readLine() + "\n");
-        }
 
+    public void connectToServer() {
+        try {
+            String alamatServer = JOptionPane.showInputDialog(
+                    gui,
+                    "Masukkan alamat IP server :",
+                    "Selamat datang di server kuis",
+                    JOptionPane.QUESTION_MESSAGE);
+            
+            Socket socket = new Socket(alamatServer, 9091);
+            in = new BufferedReader(
+                    new InputStreamReader(socket.getInputStream()));
+            out = new PrintWriter(socket.getOutputStream(), true);
+            dataField.requestFocus();
+            
+            while(true){
+                update();
+            }
+            
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(gui, ex.toString(), "Terjadi Kesalahan ! ", JOptionPane.ERROR_MESSAGE);
+            gui.dispose();
+        }
     }
-    
-    public static void main(String[] args) throws IOException{
-        
-//        String ipServer = JOptionPane.showInputDialog("Masukkan alamat server");
-//        Socket clientSocket = new Socket(ipServer, 9090);
-//        BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-//        String jawaban = in.readLine();
-//        JOptionPane.showConfirmDialog(null, jawaban);
-//        System.exit(0);
-        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        
+
+    public void update() {
+        try {
+            String inMsg = in.readLine();
+            if (inMsg != null) {
+                messageArea.append(inMsg + "\n");
+                dataField.setText("");
+            }
+
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(gui, ex.toString(), "Terjadi Kesalahan!", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
 
         Client c = new Client();
-        c.gui.setLocation(dim.width/2-c.gui.getSize().width/2, dim.height/2-c.gui.getSize().height/2);
+        c.gui.setLocationRelativeTo(null);
         c.gui.setVisible(true);
         c.connectToServer();
     }
-    
+
 }

@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -27,13 +29,26 @@ public class Client {
     private ClientGUI gui = new ClientGUI();
     private JTextField dataField = gui.getDataField();
     private JTextArea messageArea = gui.getMessageArea();
+    private Socket socket;
 
     public Client() {
         dataField.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
-                out.println(dataField.getText());
+
+                if (!"".equals(dataField.getText())) {
+
+                    if ("quit".equals(dataField.getText())) {
+                        dataField.setEnabled(false);
+                        JOptionPane.showMessageDialog(gui, "Anda telah meninggalkan percakapan", "Chatting Client", JOptionPane.INFORMATION_MESSAGE);
+                        gui.dispose();
+                        out.println("");
+                    } else {
+                        out.println(dataField.getText());
+                    }
+
+                }
             }
         });
     }
@@ -45,33 +60,39 @@ public class Client {
                     "Masukkan alamat IP server :",
                     "Selamat datang di chatting server",
                     JOptionPane.QUESTION_MESSAGE);
-            
-            Socket socket = new Socket(alamatServer, 9091);
+
+            socket = new Socket(alamatServer, 9091);
             in = new BufferedReader(
                     new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
             dataField.requestFocus();
-            
-            while(true){
-                update();
-            }
-            
+
+            update();
+
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(gui, ex.toString(), "Terjadi Kesalahan ! ", JOptionPane.ERROR_MESSAGE);
-            gui.dispose();
         }
     }
 
     public void update() {
-        try {
-            String inMsg = in.readLine();
-            if (inMsg != null) {
-                messageArea.append(inMsg + "\n");
-                dataField.setText("");
-            }
+        while (true) {
+            try {
+                String inMsg = "";
+                inMsg = in.readLine();
 
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(gui, ex.toString(), "Terjadi Kesalahan!", JOptionPane.ERROR_MESSAGE);
+                if (!"close".equals(inMsg)) {
+                    messageArea.append(inMsg + "\n");
+                    dataField.setText("");
+                } else {
+                    gui.dispose();
+                    socket.close();
+                    break;
+                }
+
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(gui, ex.toString(), "Terjadi Kesalahan!", JOptionPane.ERROR_MESSAGE);
+                break;
+            }
         }
     }
 

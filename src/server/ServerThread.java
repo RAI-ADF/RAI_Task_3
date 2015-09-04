@@ -46,38 +46,49 @@ public class ServerThread extends Thread {
                 username = in.readLine();
                 if (username == null) {
                     return;
-                } else {
-                    System.out.println("username : " + username);
                 }
-                
-                synchronized(users){
-                    if(!users.containsKey(username)){
+
+                synchronized (users) {
+                    if (!users.containsKey(username)) {
                         users.put(username, out);
-                        out.writeBytes("Silahkan untuk memulai chat, " + username + "\n");
+                        out.writeBytes("Silahkan untuk memulai chat, " + username + " ketikkan 'quit' untuk keluar \n");
+                        System.out.println(socket.getRemoteSocketAddress() + " menggunakan username " + username);
                     } else {
                         out.writeBytes("Username yang anda masukkan sudah ada. memutuskan sambungan....\n");
                         break;
                     }
                 }
-                
-                while(username != null){
+
+                while (username != "") {
                     String chat = in.readLine();
-                    
-                    System.out.println(username +" : " + chat);
-                    for (DataOutputStream d : users.values()) {
-                        d.writeBytes(username +" : " + chat+" \n");
+                    System.out.println(username + " : '" + chat + "'");
+
+                    if (chat != null) {
+                        if (!"".equals(chat)) {
+                            for (DataOutputStream d : users.values()) {
+                                d.writeBytes(username + " : " + chat + " \n");
+                            }
+                        } else {
+                            for (DataOutputStream d : users.values()) {
+                                d.writeBytes(username + " meninggalkan percakapan \n");
+                            }
+                            out.writeBytes("close\n");
+                            users.remove(username);
+                            break;
+                        }
                     }
+
                 }
+
+                
             }
 
         } catch (IOException ex) {
             System.out.println(ex.toString() + " -- " + socket.getRemoteSocketAddress());
         } finally {
-            System.out.println("Terputus dengan client : " + socket.getRemoteSocketAddress());
-            
-            if(username != null){
-                users.remove(username);
-            }
+            System.out.println("Terputus dengan client : " + socket.getRemoteSocketAddress() + " " + username);
+            username = "";
+
         }
 
     }

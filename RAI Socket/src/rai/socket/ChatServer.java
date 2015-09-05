@@ -142,7 +142,8 @@ public class ChatServer {
                 System.out.println(e);
             } finally {
                     // This client is going down!  Remove its name and its print
-                // writer from the sets, and close its socket.
+                // writer from the sets, and close its socketncj
+              
                 if (name != null) {
                     names.remove(name);
                 }

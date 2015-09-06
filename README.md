@@ -1,5 +1,7 @@
 # RAI_Task_3
 Client - Server Socket
+Muhammad Ferdy Wardianto
+1103110213
 
 ## Multiclient Chatting Apllication
 Create a simple Multi-user Chat Application using Java 

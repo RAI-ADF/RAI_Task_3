@@ -1,0 +1,41 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package soket;
+
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ *
+ * @author LENOVO
+ */
+public class Server {
+
+    
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        int portNumber = 1234;
+        System.out.println("SERVER SEDANG RUNNING");
+        try {
+            // TODO code application logic here
+            ServerSocket serverSocket = new ServerSocket(portNumber);
+            while(true){
+                Socket clientSocket = serverSocket.accept();
+                ServerThread serverThread = new ServerThread(clientSocket);
+                serverThread.run();
+            }
+        } catch (IOException e) {
+            System.out.println("Exception caught when trying to listen on port "+portNumber+" or listening for a connection");
+            System.out.println(e.getMessage());
+        }
+    }
+    
+}

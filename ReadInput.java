@@ -20,13 +20,13 @@ public class ReadInput implements Runnable{
         try {
             while ((respon = inStream.readLine()) != null) {
                 System.out.println(respon);
-                if (respon.indexOf("___ Bye") != -1) {
+                if (respon.indexOf("GoodBye") != -1) {
                     break;
                 }
             }
             boolean close = true;
         } catch (IOException ex) {
-            System.out.println("IO Exception - respon");
+            System.out.println("Exception");
         }
     }
 }

@@ -16,14 +16,14 @@ public class Server {
     public static void main(String[] args) {
         int port = 8000;
         if (args.length < 1) {
-            System.out.println("Terhubung ke port " + port);
+            System.out.println("Connect to port " + port);
         } else {
             port = Integer.valueOf(args[0]).intValue();
         }
         try {
             serverSocket = new ServerSocket(port);
         } catch (IOException ex) {
-            System.out.println("IO Exception - koneksi port");
+            System.out.println("Port Connection");
         }
 
         while (true) {
@@ -38,13 +38,13 @@ public class Server {
                 }
                 if (max == maxConnection) {
                     try (PrintStream out = new PrintStream(clientSocket.getOutputStream())) {
-                        out.println("Server penuh");
+                        out.println("Server full");
                     }
                     clientSocket.close();
                 }
 
             } catch (IOException ex) {
-                System.out.println("IO Exception = koneksi client");
+                System.out.println("Exception");
             }
 
         }

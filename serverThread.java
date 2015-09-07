@@ -40,11 +40,11 @@ public class serverThread extends Thread {
             outStream = new PrintStream(clientSocket.getOutputStream());
             outStream.println("Masukkan ID Anda: ");
             String id = inStream.readLine().trim();
-            outStream.println("___ Selamat Datang di chatroom, " + id + "! ___");
-            outStream.println("___ ketik 'quit' untuk keluar chatroom ___");
+            outStream.println("Selamat Datang di chatroom, " + id + "!");
+            outStream.println("ketik 'quit' untuk keluar chatroom");
             for (int i = 0; i < maksimum; i++) {
                 if (trit[i] != null && trit[i] != this) {
-                    trit[i].outStream.println("___ " + id + " telah bergabung di chatroom ___");
+                    trit[i].outStream.println(id + " telah bergabung di chatroom");
                 }
             }
             while (true) {
@@ -60,10 +60,10 @@ public class serverThread extends Thread {
             }
             for (int i = 0; i < maksimum; i++) {
                 if (trit[i] != null && trit[i] != this) {
-                    trit[i].outStream.println("___ " + id + " telah keluar dari chatroom ___");
+                    trit[i].outStream.println(id + " telah keluar dari chatroom");
                 }
             }
-            outStream.println("___ Bye " + id + " ___");
+            outStream.println("GoodBye " + id );
             for (int i = 0; i < maksimum; i++) {
                 if (trit[i] == this) {
                     trit[i] = null;
@@ -73,7 +73,7 @@ public class serverThread extends Thread {
             outStream.close();
             clientSocket.close();
         } catch (IOException ex) {
-            System.out.println("IO Exception - chat");
+            System.out.println("Exception");
         }
 
     }

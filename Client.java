@@ -30,7 +30,7 @@ public class Client {
             outStream = new PrintStream(clientSocket.getOutputStream());
             inStream = new DataInputStream(clientSocket.getInputStream());
         } catch (IOException ex) {
-            System.out.println("IO Exception - koneksi client");
+            System.out.println("Exception");
         }
         if (clientSocket != null && outStream != null && inStream != null) {
             try {
@@ -39,14 +39,14 @@ public class Client {
                     try {
                         outStream.println(inLine.readLine().trim());
                     } catch (IOException ex) {
-                        System.out.println("IO Exception - client chat");
+                        System.out.println("Client chat");
                     }
                 }
                 outStream.close();
                 inStream.close();
                 clientSocket.close();
             } catch (IOException ex) {
-                System.out.println("IO Exception - closing");
+                System.out.println("Exception");
             }
         }
     }

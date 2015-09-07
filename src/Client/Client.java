@@ -6,13 +6,17 @@
 
 package Client;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 /**
  *
@@ -21,7 +25,7 @@ import java.util.logging.Logger;
 public class Client extends javax.swing.JFrame {
     private Socket socket;
     private BufferedReader in;
-    private PrintWriter out;
+    private OutputStream out;
 
     /**
      * Creates new form Client
@@ -30,6 +34,17 @@ public class Client extends javax.swing.JFrame {
         initComponents();
         try {
             ConnectToServer();
+            
+            this.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    try {
+                        socket.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            });
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -38,7 +53,23 @@ public class Client extends javax.swing.JFrame {
     private void ConnectToServer() throws IOException {
         socket = new Socket("127.0.0.1", 45678);
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        out = new PrintWriter(socket.getOutputStream(), true);
+        out = socket.getOutputStream();
+                
+        Thread receivingThread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    BufferedReader reader = new BufferedReader(
+                            new InputStreamReader(socket.getInputStream()));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        TEXTAREA_MESSAGES.append(line + "\n");
+                    }
+                } catch (IOException ex) {
+                }
+            }
+        };
+        receivingThread.start();
     }
 
     /**
@@ -53,8 +84,8 @@ public class Client extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         TEXTAREA_INPUT = new javax.swing.JTextArea();
         BUTTON_SEND = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        LIST_MESSAGES = new javax.swing.JList();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        TEXTAREA_MESSAGES = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -63,13 +94,17 @@ public class Client extends javax.swing.JFrame {
         jScrollPane1.setViewportView(TEXTAREA_INPUT);
 
         BUTTON_SEND.setText("SEND");
-
-        LIST_MESSAGES.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
+        BUTTON_SEND.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BUTTON_SENDActionPerformed(evt);
+            }
         });
-        jScrollPane2.setViewportView(LIST_MESSAGES);
+
+        TEXTAREA_MESSAGES.setEditable(false);
+        TEXTAREA_MESSAGES.setBackground(new java.awt.Color(204, 204, 204));
+        TEXTAREA_MESSAGES.setColumns(20);
+        TEXTAREA_MESSAGES.setRows(5);
+        jScrollPane3.setViewportView(TEXTAREA_MESSAGES);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -78,7 +113,7 @@ public class Client extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2)
+                    .addComponent(jScrollPane3)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -89,7 +124,7 @@ public class Client extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1)
@@ -99,6 +134,17 @@ public class Client extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void BUTTON_SENDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BUTTON_SENDActionPerformed
+        try {
+            // TODO add your handling code here:
+            out.write((TEXTAREA_INPUT.getText() + "\r\n").getBytes());
+            out.flush();
+            TEXTAREA_INPUT.setText(null);
+        } catch (IOException ex) {
+            
+        }
+    }//GEN-LAST:event_BUTTON_SENDActionPerformed
 
     /**
      * @param args the command line arguments
@@ -133,13 +179,13 @@ public class Client extends javax.swing.JFrame {
                 new Client().setVisible(true);
             }
         });
-    }
+    }    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BUTTON_SEND;
-    private javax.swing.JList LIST_MESSAGES;
     private javax.swing.JTextArea TEXTAREA_INPUT;
+    private javax.swing.JTextArea TEXTAREA_MESSAGES;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     // End of variables declaration//GEN-END:variables
 }

@@ -38,11 +38,11 @@ public class ServerThread extends Thread {
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             
             System.out.println("Connected to " + socket.getRemoteSocketAddress());
-            out.writeBytes("Masukan Username : \n");
             
             // Wait for username
             while (true) {
-                username = in.readLine();                
+                out.writeBytes("Masukan Username : \n");
+                username = in.readLine();
                 if (username == null) {
                     return;
                 }
@@ -50,31 +50,23 @@ public class ServerThread extends Thread {
                 synchronized (users) {
                     if (!users.containsKey(username)) {
                         users.put(username, out);
-                        out.writeBytes("Welcome " + username + ", type 'quit' to exit \n");
+                        out.writeBytes("Welcome " + username + "\n");
                         System.out.println(socket.getRemoteSocketAddress() + " : " + username);
-                    } else {
-                        out.writeBytes("Username not available");
                         break;
+                    } else {
+                        out.writeBytes("Username not available \n");
                     }
                 }
             }
             
             // Chat loop
-            while (!username.isEmpty()) {
+            while (username != null) {
                 String msg = in.readLine();
                 
                 if (msg == null) continue;
                 
-                if (!msg.equals("quit")) {
-                    for (DataOutputStream d : users.values()) {
-                        d.writeBytes(username + " : " + msg + " \n");
-                    }
-                } else {
-                    for (DataOutputStream d : users.values()) {
-                        d.writeBytes(username + " leaving conversation \n");
-                    }
-                    users.remove(username);
-                    break;
+                for (DataOutputStream d : users.values()) {
+                    d.writeBytes(username + " : " + msg + " \n");
                 }
             }
         } catch (IOException ex) {

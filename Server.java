@@ -6,17 +6,19 @@
 
 package raitask3;
 
-import java.io.PrintStream;
 import java.io.IOException;
-import java.net.Socket;
+import java.io.PrintStream;
 import java.net.ServerSocket;
+import java.net.Socket;
 
 /**
  *
  * @author auliamarchita
  */
+
 public class Server {
   private static ServerSocket serverSocket = null;
+  private PrintStream os = null;
   private static Socket clientSocket = null;
   private static final int maxClients = 5;
   private static final ServerThread[] threads = new ServerThread[maxClients];
@@ -53,6 +55,7 @@ public class Server {
           clientSocket.close();
         }
       } catch (IOException e) {
+        System.out.println(e);
       }
     }
   }  

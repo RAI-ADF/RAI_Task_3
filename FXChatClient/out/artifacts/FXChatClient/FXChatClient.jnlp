@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="JavaFXApp.jnlp">
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="FXChatClient.jnlp">
   <information>
-    <title>FX Chat Server</title>
-    <vendor>Unknown vendor</vendor>
+    <title>FX Chat Client</title>
+    <vendor>rizkidoank</vendor>
     <description>Sample JavaFX 2.0 application.</description>
     <offline-allowed/>
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="JavaFXApp.jar" size="12898" download="eager" />
+    <jar href="FXChatClient.jar" size="15216" download="eager" />
   </resources>
-  <jfx:javafx-desc  width="600" height="400" main-class="server.Main"  name="JavaFXApp" />
+  <jfx:javafx-desc  width="600" height="400" main-class="client.Main"  name="FXChatClient" />
   <update check="background"/>
 </jnlp>

@@ -21,7 +21,7 @@ public class ReadInput extends Thread{
                 controller.getTxtChat().appendText(inputMsg + "\n");
             }
         } catch (java.lang.Exception e){
-
+            e.printStackTrace();
         }
     }
 }

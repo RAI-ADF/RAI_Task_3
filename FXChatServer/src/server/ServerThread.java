@@ -37,12 +37,13 @@ public class ServerThread extends Thread {
                     if (!users.containsKey(username)){
                         outputStream.writeBytes("username available, added!\n");
                         users.put(username, outputStream);
-                        serverController.getTxtLog().appendText("users connected : " + users.keySet().toString() + "\n");
+                        serverController.getTxtLog().appendText("users connected : " + users.keySet().toString() + "\n\n");
+                        outputStream.writeBytes("users connected : " + users.keySet().toString() + "\n\n");
                         serverController.getTxtClients().setText(String.valueOf(users.size()));
                         break;
                     }
                     else{
-                        outputStream.writeBytes("username not available, use other username.\n");
+                        outputStream.writeBytes("username not available, use other username.\n\n");
                     }
                 }
             }

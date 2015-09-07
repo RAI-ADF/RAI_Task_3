@@ -1,6 +1,7 @@
 package client;
 
 import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -38,43 +39,43 @@ public class ClientController extends Thread{
     BufferedReader in;
     DataOutputStream out;
 
-//    public void animate(){
-//        logo.setLayoutX(64);
-//        logo.setLayoutY(104);
-//        logo.setFitWidth(192);
-//        logo.setFitHeight(192);
-//
-//        FadeTransition fadeLogo = new FadeTransition(Duration.millis(500),logo);
-//        fadeLogo.setFromValue(0.0);
-//        fadeLogo.setToValue(1.0);
-//
-//        TranslateTransition moveLogo = new TranslateTransition(Duration.millis(500),logo);
-//        moveLogo.setToX(-104.0);
-//        moveLogo.setToY(-148.0);
-//        ScaleTransition scaleLogo = new ScaleTransition(Duration.millis(500),logo);
-//        scaleLogo.setToX(0.38);
-//        scaleLogo.setToY(0.38);
-//
-//        FadeTransition fadeTitle = new FadeTransition(Duration.millis(200),txtTitle);
-//        fadeTitle.setFromValue(0.0);
-//        fadeTitle.setToValue(1.0);
-//
-//        FadeTransition fadeChat = new FadeTransition(Duration.millis(200),txtChat);
-//        fadeChat.setFromValue(0.0);
-//        fadeChat.setToValue(1.0);
-//
-//        FadeTransition fadeBtn = new FadeTransition(Duration.millis(200),btnDisconnect);
-//        fadeBtn.setFromValue(0.0);
-//        fadeBtn.setToValue(1.0);
-//
-//        FadeTransition fadeInput = new FadeTransition(Duration.millis(200),txtIsi);
-//        fadeInput.setFromValue(0.0);
-//        fadeInput.setToValue(1.0);
-//
-//        SequentialTransition st = new SequentialTransition(fadeLogo,scaleLogo,moveLogo,fadeTitle,fadeChat,fadeBtn,fadeInput);
-//        st.setDelay(Duration.millis(1000));
-//        st.play();
-//    }
+    public void animate(){
+        logo.setLayoutX(64);
+        logo.setLayoutY(104);
+        logo.setFitWidth(192);
+        logo.setFitHeight(192);
+
+        FadeTransition fadeLogo = new FadeTransition(Duration.millis(500),logo);
+        fadeLogo.setFromValue(0.0);
+        fadeLogo.setToValue(1.0);
+
+        TranslateTransition moveLogo = new TranslateTransition(Duration.millis(500),logo);
+        moveLogo.setToX(-104.0);
+        moveLogo.setToY(-148.0);
+        ScaleTransition scaleLogo = new ScaleTransition(Duration.millis(500),logo);
+        scaleLogo.setToX(0.38);
+        scaleLogo.setToY(0.38);
+
+        FadeTransition fadeTitle = new FadeTransition(Duration.millis(200),txtTitle);
+        fadeTitle.setFromValue(0.0);
+        fadeTitle.setToValue(1.0);
+
+        FadeTransition fadeChat = new FadeTransition(Duration.millis(200),txtChat);
+        fadeChat.setFromValue(0.0);
+        fadeChat.setToValue(1.0);
+
+        FadeTransition fadeBtn = new FadeTransition(Duration.millis(200),btnDisconnect);
+        fadeBtn.setFromValue(0.0);
+        fadeBtn.setToValue(1.0);
+
+        FadeTransition fadeInput = new FadeTransition(Duration.millis(200),txtMsg);
+        fadeInput.setFromValue(0.0);
+        fadeInput.setToValue(1.0);
+
+        SequentialTransition st = new SequentialTransition(fadeLogo,scaleLogo,moveLogo,fadeTitle,fadeChat,fadeBtn,fadeInput);
+        st.setDelay(Duration.millis(1000));
+        st.play();
+    }
 
     public void showServerSetup(){
         TextInputDialog inputIPDialog = new TextInputDialog();
@@ -84,6 +85,21 @@ public class ClientController extends Thread{
         Optional<String> result = inputIPDialog.showAndWait();
         if (result.isPresent()){
             server_ip = result.get();
+        }
+        animate();
+    }
+
+    public void quitChat(){
+        try {
+            if (server.isConnected()){
+                server.close();
+                out.close();
+                in.close();
+                Platform.exit();
+                System.exit(1);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
     public void initialize(){
@@ -101,6 +117,7 @@ public class ClientController extends Thread{
             out = new DataOutputStream(server.getOutputStream());
             ReadInput read = new ReadInput(in, this);
             read.start();
+
             txtMsg.setOnKeyPressed(new EventHandler<KeyEvent>() {
                 @Override
                 public void handle(KeyEvent event) {
@@ -108,9 +125,8 @@ public class ClientController extends Thread{
                         try {
                             msgInput = txtMsg.getText() + "\n";
                             if (msgInput.equals("quit")) {
-                                server.close();
-                                out.close();
-                                in.close();
+                                quitChat();
+                                System.out.println("Application closed successfully");
                             }
                         out.writeBytes(msgInput);
                             out.flush();
@@ -121,6 +137,7 @@ public class ClientController extends Thread{
                     }
                 }
             });
+
         } catch (IOException e) {
             System.err.println("Terjadi kesalahan!");
             System.err.println(e.getMessage());

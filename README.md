@@ -1,3 +1,17 @@
+#FX Chat Application
+#1103120042 - Rizki
+
+##System Requirement
+* Java 8 JRE (required for javafx).
+* Application use port 8001 to work, please reserve and open it first.
+
+##How to use
+* Navigate to packages directory
+* Extract each archives
+* If you use Linux, just launch start.sh
+* If other OS, run it by click *.jar or by 'java - jar jarname'
+* Please run the server first
+
 # RAI_Task_3
 Client - Server Socket
 

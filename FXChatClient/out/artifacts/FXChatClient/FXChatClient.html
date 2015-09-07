@@ -3,7 +3,7 @@
 <script>
     function launchApplication(jnlpfile) {
         dtjava.launch(            {
-                url : 'JavaFXApp.jnlp'
+                url : 'FXChatClient.jnlp'
             },
             {
                 javafx : '8.0+'
@@ -15,11 +15,11 @@
 </script>
 
 <script>
-    function javafxEmbed_JavaFXApp_id() {
+    function javafxEmbed_FXChatClient_id() {
         dtjava.embed(
             {
-                id : 'JavaFXApp_id',
-                url : 'JavaFXApp.jnlp',
+                id : 'FXChatClient_id',
+                url : 'FXChatClient.jnlp',
                 placeholder : 'javafx-app-placeholder',
                 width : 600,
                 height : 400
@@ -31,12 +31,12 @@
         );
     }
     <!-- Embed FX application into web page once page is loaded -->
-    dtjava.addOnloadCallback(javafxEmbed_JavaFXApp_id);
+    dtjava.addOnloadCallback(javafxEmbed_FXChatClient_id);
 </script>
 
 </head><body>
-<h2>Test page for <b>JavaFXApp</b></h2>
-  <b>Webstart:</b> <a href='JavaFXApp.jnlp' onclick="return launchApplication('JavaFXApp.jnlp');">click to launch this app as webstart</a><br><hr><br>
+<h2>Test page for <b>FXChatClient</b></h2>
+  <b>Webstart:</b> <a href='FXChatClient.jnlp' onclick="return launchApplication('FXChatClient.jnlp');">click to launch this app as webstart</a><br><hr><br>
 
   <!-- Applet will be inserted here -->
   <div id='javafx-app-placeholder'></div>

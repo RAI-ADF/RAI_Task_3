@@ -30,23 +30,23 @@ public class ServerThread extends Thread {
         private static HashSet<String> names = new HashSet<String>();
         private static HashSet<PrintWriter> writers = new HashSet<PrintWriter>();
         private String name;
-        private Socket socket;
+        private Socket Clientsocket;
         private BufferedReader in;
         private PrintWriter out;
         
         public ServerThread(Socket socket){
-            this.socket=socket;
+            this.Clientsocket=socket;
         }
         
         public void run() {
             try {
 
-
+                
                 in = new BufferedReader(new InputStreamReader(
-                socket.getInputStream()));
-                out = new PrintWriter(socket.getOutputStream(), true);
+                    Clientsocket.getInputStream()));
+                out = new PrintWriter(Clientsocket.getOutputStream(), true);
 
-
+             
                 while (true) {
                     out.println("SUBMITNAME");
                     name = in.readLine();
@@ -61,11 +61,11 @@ public class ServerThread extends Thread {
                     }
                 }
 
-
+                
                 out.println("NAMEACCEPTED");
                 writers.add(out);
 
-
+       
                 while (true) {
                     String input = in.readLine();
                     if (input == null) {
@@ -86,7 +86,7 @@ public class ServerThread extends Thread {
                     writers.remove(out);
                 }
                 try {
-                    socket.close();
+                    Clientsocket.close();
                 } catch (IOException e) {
                 }
             }

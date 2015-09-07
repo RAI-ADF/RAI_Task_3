@@ -26,15 +26,11 @@ public class Server {
     private static final int PORT = 9001;
 
 
-    private static HashSet<String> names = new HashSet<String>();
-
-
-    private static HashSet<PrintWriter> writers = new HashSet<PrintWriter>();
-
 
     public static void main(String[] args) throws Exception {
-        System.out.println("Server ON ");
+        System.out.println("Server Socket is ON ");
         ServerSocket listener = new ServerSocket(PORT);
+
         try {
             while (true) {
                 new ServerThread(listener.accept()).start();

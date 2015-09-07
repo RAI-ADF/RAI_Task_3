@@ -60,21 +60,4 @@ public class Client extends ReadInput{
             }
         }
     }
-
-    /*@Override
-    public void run() {
-        String respon;
-        try {
-            while ((respon = inStream.readLine()) != null) {
-                System.out.println(respon);
-                if (respon.indexOf("___ Bye") != -1) {
-                    break;
-                }
-            }
-            close = true;
-        } catch (IOException ex) {
-            System.out.println("IO Exception - respon");
-        }
-    }*/
 }
-

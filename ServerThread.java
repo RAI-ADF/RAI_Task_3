@@ -1,16 +1,19 @@
-package testing;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package rai_task3;
+import java.io.*;
+import java.net.*;
+import java.util.HashSet;
 
 /**
  *
  * @author Thinkpad
  */
-import java.io.*;
-import java.net.*;
-import java.util.HashSet;
-
-
-class ServerThread extends Thread {
-        private static HashSet<String> names = new HashSet<String>();
+public class ServerThread extends Thread {
+    private static HashSet<String> names = new HashSet<String>();
         private static HashSet<PrintWriter> writers = new HashSet<PrintWriter>();   
         private String name;
         private Socket socket;
@@ -65,4 +68,4 @@ class ServerThread extends Thread {
                 }
             }
         }
-    }
+}

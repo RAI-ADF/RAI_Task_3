@@ -140,6 +140,7 @@ public class Client extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_msg_sendActionPerformed
 
+	
     /**
      * @param args the command line arguments
      */

@@ -26,27 +26,28 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-
 /**
  *
  * @author auliamarchita
  */
+
 public class Client {
-
-
+    
     static class ChatAccess extends Observable {
         private Socket socket;
-        private OutputStream outputStream;
+        private OutputStream os;
 
         @Override
         public void notifyObservers(Object arg) {
             super.setChanged();
             super.notifyObservers(arg);
         }
-
+        
+        /*Read Input*/
+        
         public ChatAccess(String server, int port) throws IOException {
             socket = new Socket(server, port);
-            outputStream = socket.getOutputStream();
+            os = socket.getOutputStream();
 
             Thread receivingThread = new Thread() {
                 @Override
@@ -54,11 +55,11 @@ public class Client {
                     try {
                         BufferedReader reader = new BufferedReader(
                                 new InputStreamReader(socket.getInputStream()));
-                        String line;
-                        while ((line = reader.readLine()) != null)
-                            notifyObservers(line);
-                    } catch (IOException ex) {
-                        notifyObservers(ex);
+                        String respon;
+                        while ((respon = reader.readLine()) != null)
+                            notifyObservers(respon);
+                    } catch (IOException e) {
+                        notifyObservers(e);
                     }
                 }
             };
@@ -69,18 +70,18 @@ public class Client {
 
         public void send(String text) {
             try {
-                outputStream.write((text + CRLF).getBytes());
-                outputStream.flush();
-            } catch (IOException ex) {
-                notifyObservers(ex);
+                os.write((text + CRLF).getBytes());
+                os.flush();
+            } catch (IOException e) {
+                notifyObservers(e);
             }
         }
 
         public void close() {
             try {
                 socket.close();
-            } catch (IOException ex) {
-                notifyObservers(ex);
+            } catch (IOException e) {
+                notifyObservers(e);
             }
         }
     }
@@ -90,7 +91,7 @@ public class Client {
         private JTextArea textArea;
         private JTextField inputTextField;
         private JButton sendButton;
-        private ChatAccess chatAccess;
+        private final ChatAccess chatAccess;
 
         public ChatFrame(ChatAccess chatAccess) {
             this.chatAccess = chatAccess;
@@ -131,9 +132,11 @@ public class Client {
                 }
             });
         }
+        
         public void update(Observable o, Object arg) {
             final Object finalArg = arg;
             SwingUtilities.invokeLater(new Runnable() {
+                
                 public void run() {
                     textArea.append(finalArg.toString());
                     textArea.append("\n");
@@ -148,13 +151,13 @@ public class Client {
         ChatAccess access = null;
         try {
             access = new ChatAccess(server, port);
-        } catch (IOException ex) {
-            System.out.println("Cannot connect to " + server + ":" + port);
-            ex.printStackTrace();
-            System.exit(0);
+        } catch (IOException e) {
+            System.out.println("Cannot Connect To " + server + ":" + port);
+            e.printStackTrace();
+            System.exit(1);
         }
         JFrame frame = new ChatFrame(access);
-        frame.setTitle("Multiple Client Chat - Connected to " + server + ":" + port);
+        frame.setTitle("Multiclient Chatting Apllication " + server + ":" + port);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setLocationRelativeTo(null);

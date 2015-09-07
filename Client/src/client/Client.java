@@ -17,14 +17,16 @@ import java.net.UnknownHostException;
  * @author user
  */
 public class Client {
-
+    public String serverName = "127.0.0.1";
     /**
      * @param args the command line arguments
      * @throws java.io.IOException
      */
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
-        String serverName = "127.0.0.1";
+        Client c = new Client();
+        InputIP wip =  new InputIP();
+        
         int portNumber = 1234;
         
         try{
@@ -32,7 +34,8 @@ public class Client {
             
 //            System.out.println("Input server IP : ");
 //            String ip = keyBoard.readLine();
-            Socket connect = new Socket("localhost", 1234);
+            wip.setVisible(true);
+            Socket connect = new Socket(wip.ip, 1234);
             
             BufferedReader inputStream = new BufferedReader(new InputStreamReader(connect.getInputStream()));
             PrintWriter outputStream = new PrintWriter(connect.getOutputStream(), true);
@@ -55,10 +58,10 @@ public class Client {
             }while (!inputKeyBoard.equals("quit"));
             
         }catch (UnknownHostException e){
-            System.err.println("Don't know about host "+serverName);
+            System.err.println("Don't know about host "+c.serverName);
             System.exit(1);
         }catch (IOException e){
-            System.err.println("Couldn't get I/O for the connection to " + serverName);
+            System.err.println("Couldn't get I/O for the connection to " + c.serverName);
             System.exit(1);
         }
     }

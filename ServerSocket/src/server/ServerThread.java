@@ -67,7 +67,7 @@ public class ServerThread extends Thread {
                         d.writeBytes(message+"\n");
                         d.flush();
                     }else{
-                        d.writeBytes("Message sent"+"\n");
+                        d.writeBytes("Me : "+ inputan +"\n");
                         d.flush();
                     }
                 }

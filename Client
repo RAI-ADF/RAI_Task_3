@@ -1,0 +1,139 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package soket;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+/**
+ *
+ * @author LENOVO
+ */
+public class Client {
+
+    JFrame frame = new JFrame("Curve Chat");
+//    JTextField textField = new JTextField(40);
+//    JTextArea messageArea = new JTextArea(8, 40);
+
+    /*
+     Constructor class chat client 
+     */
+//    public Client() {
+//
+//        // Tampilan GUI
+//        textField.setEditable(false);
+//        messageArea.setEditable(false);
+//        frame.getContentPane().add(textField, "North");
+//        frame.getContentPane().add(new JScrollPane(messageArea), "Center");
+//        frame.pack();
+//
+////        textField.addActionListener(new ActionListener() {
+////            public void actionPerformed(ActionEvent e) {
+////                out.println(textField.getText());
+////                textField.setText("");
+////            }
+////        });
+//    }
+
+    private String getServerAddress() {
+        return JOptionPane.showInputDialog(
+                frame,
+                "Masukkan IP Address Server:",
+                "Welcome to Curve Chat",
+                JOptionPane.QUESTION_MESSAGE);
+    }
+
+    String getName() {
+        return JOptionPane.showInputDialog(
+                frame,
+                "Username:",
+                "Display Name",
+                JOptionPane.PLAIN_MESSAGE);
+    }
+    
+    public void run(){
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+//        int portNumber = 1234;
+        try {
+            BufferedReader keyBoard = new BufferedReader(
+                    new InputStreamReader(System.in));
+            String ip = getServerAddress();
+            Socket connect = new Socket(ip, 1234);
+            BufferedReader inStream = new BufferedReader(
+                    new InputStreamReader(connect.getInputStream()));
+            PrintWriter outStream = new PrintWriter(connect.getOutputStream(), true);
+            ReadInput in = new ReadInput(inStream);
+            in.run(outStream);
+            //in.start();
+            String inputKeyBoard = keyBoard.readLine();
+//            while(true){
+//            //String line = inStream.readLine();
+            do{
+//                //System.out.println(">> ");
+                inputKeyBoard = keyBoard.readLine();
+                outStream.println(inputKeyBoard);
+                outStream.flush();
+//                String line = inStream.readLine();
+//            if (line.startsWith("Masukan username")) {
+//                outStream.println(client.getName());
+//                client.textField.setEditable(true);
+//            } else if (line.startsWith("pesan")) {
+//                client.messageArea.append(line.substring(8) + "\n");
+            }while(!inputKeyBoard.equals("quit"));
+//            } 
+//            Socket clientSocket = new Socket(serverName, portNumber);
+//            PrintWriter outStream = new PrintWriter(clientSocket.getOutputStream(), true);
+//            BufferedReader inStream = new BufferedReader(
+//                    new InputStreamReader(clientSocket.getInputStream()));
+//            PrintWriter outStream = new PrintWriter(clientSocket.getOutputStream(), true);
+//            BufferedReader keyBoard = new BufferedReader(
+//                    new InputStreamReader(System.in));
+//            System.out.println("input server ip: ");
+//            String ip = keyBoard.readLine();
+//            Socket connect = new Socket(ip, 1234);
+//            System.out.println("Just connected to "+clientSocket.getRemoteSocketAddress());
+//            String userInput;
+//            while((userInput = keyBoard.readLine()) !=  null){
+//                outStream.println(userInput);
+//                String message = inStream.readLine();
+//                System.out.println("Reply from server: "+message);
+//            }
+//        } catch (UnknownHostException e) {
+//            System.out.println("Don't know about host"+serverName);
+//            System.exit(1);
+        } catch (IOException e){
+//            System.out.println("Couldn't get I/O for the connection to "+serverName);
+            System.exit(1);
+        }
+    }
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        // TODO code application logic here
+//        String serverName = "192.168.1.106";
+        Client client = new Client();
+        ClientJFrame jFrame = new ClientJFrame();
+        client.run();
+        jFrame.setVisible(true);
+        
+    }
+    
+}

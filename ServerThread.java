@@ -18,7 +18,6 @@ import java.util.HashSet;
  * @author auliamarchita
  */
 
-
 public class ServerThread extends Thread{
     private String clientName = null;
     private DataInputStream is = null;
@@ -59,12 +58,12 @@ public class ServerThread extends Thread{
                       }
                 }
             }
-            os.println("Welcome " + name + " to the chat room." + "\n'quit' for leave conversation. \n");
+            os.println("Welcome " + name + " to the chat room." + "\n'/quit' for leave conversation. \n");
       
       synchronized (this) {
         for (int i = 0; i < maxClients; i++) {
           if (threads[i] != null && threads[i] != this) {
-            threads[i].os.println("" + name + " has joined");
+            threads[i].os.println("" + name + " has joined.");
             out.println("" + name + " has joined.");
           }
         }
@@ -76,16 +75,16 @@ public class ServerThread extends Thread{
                 }
                 for (int i = 0; i < maxClients; i++) {
                     if (threads[i] != null) {
-                        threads[i].os.println("<" + name + "> : " + chat);
-                    }
-                }
-            }
-      
+                        threads[i].os.println("<" + name + "> : " + chat);  
+                    } 
+                } out.println("" + name + " sent message.");
+            } 
       synchronized (this) {
         for (int i = 0; i < maxClients; i++) {
           if (threads[i] != null && threads[i] != this
               && threads[i].clientName != null) {
             threads[i].os.println("" + name + " has left.");
+            out.println("" + name + " has left.");
           }
         }
       }

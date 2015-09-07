@@ -5,12 +5,19 @@
  */
 package multichat;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+
 /**
  *
  * @author fadhlil
  */
 public class CHatClientGui extends javax.swing.JFrame {
-
+    BufferedReader inputStream;
+    PrintWriter outputStream;
+    boolean connected = false;
     /**
      * Creates new form CHatClientGui
      */
@@ -31,9 +38,9 @@ public class CHatClientGui extends javax.swing.JFrame {
         chatScroll = new javax.swing.JScrollPane();
         chat = new javax.swing.JTextArea();
         send = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        username = new javax.swing.JTextField();
+        ip = new javax.swing.JTextField();
+        connect = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -54,16 +61,21 @@ public class CHatClientGui extends javax.swing.JFrame {
             }
         });
 
-        jTextField1.setText("Username");
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        username.setText("Username");
+        username.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                usernameActionPerformed(evt);
             }
         });
 
-        jTextField2.setText("IP");
+        ip.setText("IP");
 
-        jButton1.setText("connect");
+        connect.setText("connect");
+        connect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                connectActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -73,27 +85,27 @@ public class CHatClientGui extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(chatScroll)
-                    .addComponent(jTextField1)
+                    .addComponent(username)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(message, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(send)
                         .addGap(0, 2, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jTextField2)
+                        .addComponent(ip)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)))
+                        .addComponent(connect)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(username, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(ip, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(connect))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(chatScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -112,11 +124,49 @@ public class CHatClientGui extends javax.swing.JFrame {
 
     private void sendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendActionPerformed
         // TODO add your handling code here:
+        if(connected){
+            outputStream.println(message.getText());
+            message.setText("");
+            outputStream.flush();
+        }
     }//GEN-LAST:event_sendActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void usernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_usernameActionPerformed
+
+    private void connectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectActionPerformed
+        // TODO add your handling code here:
+        if(!connected){
+            int port = 2000;
+            try{
+                Socket connects = new Socket(ip.getText(), port);
+
+                //i/o reader
+                //BufferedReader 
+                inputStream = new BufferedReader(new InputStreamReader(connects.getInputStream()));
+                //PrintWriter
+                outputStream = new PrintWriter(connects.getOutputStream(),true);
+                outputStream.println(username.getText());
+                outputStream.flush();
+                ReadInput in = new ReadInput(inputStream,chat);
+                in.start();
+                connected = true;
+                connect.setText("disconnect");
+                username.setEnabled(false);
+                ip.setEnabled(false);
+            }catch(Exception e){
+
+            }
+        }else{
+            chat.append("\nyou left the chat room");
+            outputStream.println("quit");
+            outputStream.flush();
+            connect.setText("connect");
+            username.setEnabled(true);
+            ip.setEnabled(true);
+        }
+    }//GEN-LAST:event_connectActionPerformed
 
     /**
      * @param args the command line arguments
@@ -156,10 +206,10 @@ public class CHatClientGui extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea chat;
     private javax.swing.JScrollPane chatScroll;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JButton connect;
+    private javax.swing.JTextField ip;
     private javax.swing.JTextField message;
     private javax.swing.JButton send;
+    private javax.swing.JTextField username;
     // End of variables declaration//GEN-END:variables
 }

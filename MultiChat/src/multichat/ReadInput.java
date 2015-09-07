@@ -6,6 +6,7 @@
 package multichat;
 
 import java.io.BufferedReader;
+import javax.swing.JTextArea;
 
 /**
  *
@@ -13,9 +14,16 @@ import java.io.BufferedReader;
  */
 class ReadInput extends Thread{
     private BufferedReader inputStream;
+    private JTextArea chatArea;
     
     public ReadInput(BufferedReader inputStream){
         this.inputStream = inputStream;
+        chatArea = null;
+    }
+    
+    public ReadInput(BufferedReader inputStream, JTextArea chatArea){
+        this.inputStream = inputStream;
+        this.chatArea = chatArea;
     }
     
     @Override
@@ -23,8 +31,13 @@ class ReadInput extends Thread{
         try{
             String inputan;
             while((inputan = inputStream.readLine()) != null){
-                System.out.println(inputan);
-                System.out.print(">> ");
+                if(chatArea==null){
+                    System.out.println(inputan);
+                    System.out.print(">> ");
+                }else{
+                    chatArea.append("\n" + inputan);
+                }
+                
             }
         }catch(Exception e){
             

@@ -46,19 +46,21 @@ public class ServerThread extends Thread{
             //System.out.println("connected with: " + clientSocket.getRemoteSocketAddress());
             
             while (true) {            
-            outputStream.writeBytes("submit your username\n");
-            username = inputStream.readLine();
-            if(username==null){
-                return;
-            }
-            synchronized (users){
-                if(!users.containsKey(username)){
-                    outputStream.writeBytes("username has already been used\n");
-                    users.put(username,outputStream);
-                    break;
+                //outputStream.writeBytes("submit your username\n");
+                username = inputStream.readLine();
+                if(username==null){
+                    return;
+                }
+                synchronized (users){
+                    if(!users.containsKey(username)){
+                        outputStream.writeBytes("you joined the chat room\n");
+                        users.put(username,outputStream);
+                        break;
+                    }else{
+                        outputStream.writeBytes("username has already been used\n");
+                    }
                 }
             }
-        }
             
             System.out.println("connected with: " + client.getRemoteSocketAddress());
             String inputLine,message;

@@ -1,15 +1,18 @@
-package testing;
-
-/**
- *
- * @author Thinkpad
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
+package rai_task3;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.*;
 import javax.swing.*;
-
+/**
+ *
+ * @author Thinkpad
+ */
 public class Client {
     BufferedReader in;
     PrintWriter out;
@@ -73,4 +76,3 @@ public class Client {
         client.run();
     }
 }
-

@@ -20,14 +20,14 @@ import java.util.logging.Logger;
  * @author Fauzan Razandi
  */
 public class ServerThread extends Thread{
-    private Socket clientSocket;
-    private String username;
-    private static HashSet<String> users = new HashSet<String>();
-    private static HashSet<PrintWriter> message = new HashSet<PrintWriter>();
-    private BufferedReader inputStream;
-    private PrintWriter outputStream;
+    Socket clientSocket;
+    String username;
+    static HashSet<String> users = new HashSet<String>();
+    static HashSet<PrintWriter> message = new HashSet<PrintWriter>();
+    BufferedReader inputStream;
+    PrintWriter outputStream;
    
-    String input;
+  
     
     public ServerThread(Socket clientSocket){
         this.clientSocket = clientSocket;
@@ -35,12 +35,13 @@ public class ServerThread extends Thread{
     
     public void run(){
         try {
-            System.out.println("Connection Start");
             inputStream = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            outputStream = new PrintWriter(clientSocket.getOutputStream());
+            outputStream = new PrintWriter(clientSocket.getOutputStream(), true);
+            System.out.println("Client Connected");
+           
            
             while(true){
-                outputStream.println("Input Username : ");
+                outputStream.println("USERNAME");
                 username = inputStream.readLine();
                 if(username == null){
                     return;
@@ -48,25 +49,21 @@ public class ServerThread extends Thread{
                 synchronized (users){
                     if(!users.contains(username)){
                         users.add(username);
-                        outputStream.println("Start your chat. Type quit to end the chat.");
-                        break;
-                    }else{
-                        outputStream.println("Username has already been used \n");
                         break;
                     }
                 }
             }
-            
-                outputStream.println("Name Accepted");
+              
+                outputStream.println("ACCEPTEDUSERNAME");
                 message.add(outputStream);
                 
                 while(true){
-                    input = inputStream.readLine();
+                    String input = inputStream.readLine();
                     if(input == null){
                         return;
                     }
                     for(PrintWriter user: message){
-                        user.println(username + ": " + input);
+                        user.println("MESSAGE " + username + ": "+ input);
                     }
                 }
                     
@@ -79,12 +76,10 @@ public class ServerThread extends Thread{
             if(outputStream != null){
                 message.remove(outputStream);
             }
-            
             try{
                 clientSocket.close();
             }
             catch(IOException e){
-                
             }
         }
        

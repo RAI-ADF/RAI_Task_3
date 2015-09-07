@@ -16,15 +16,21 @@ import javax.swing.JTextArea;
  * @author Fauzan Razandi
  */
 public class ReadInput {
-    private BufferedReader inputStream;
-    private PrintWriter outputStream;
-    private Socket clientSocket;
-    JTextArea messageArea = new JTextArea(10, 50);
+   
+    BufferedReader inputStream;
     
+    public ReadInput(BufferedReader inputStream){
+        this.inputStream = inputStream;
+    }
     public void run(){
         try{
-            String message = inputStream.readLine();
-            messageArea.append(message.substring(10) + "\n");
+            Client client = new Client();
+            System.out.print("Chat Broadcast: ");
+            String inputan = inputStream.readLine();
+            System.out.println("");
+            while((inputan)!= null){
+                client.messageArea.append(inputan.substring(8) + "\n");
+            }
         }catch(Exception e){
             System.out.println(e);
         }

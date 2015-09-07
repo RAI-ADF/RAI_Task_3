@@ -22,13 +22,12 @@ import javax.swing.*;
  * @author Fauzan Razandi
  */
 public class Client {
-    private BufferedReader inputStream;
-    private PrintWriter outputStream;
-    private String serverAddress;
-    private Socket clientSocket;
+    BufferedReader inputStream;
+    PrintWriter outputStream;
+    String serverAddress;
     JFrame frame = new JFrame("1103120159-CHATBOX");
-    JTextField messageInput = new JTextField(50);
-    JTextArea messageArea = new JTextArea(10, 50);
+    JTextField messageInput = new JTextField(40);
+    JTextArea messageArea = new JTextArea(8, 40);
     
     public Client(){
         messageInput.setEditable(false);
@@ -47,7 +46,7 @@ public class Client {
         });
     }
     
-    private String getServerAddress(){
+    public String getServerAddress(){
         return JOptionPane.showInputDialog(
                frame,
                "Enter IP Address:",
@@ -55,7 +54,7 @@ public class Client {
                JOptionPane.QUESTION_MESSAGE);
     }
     
-    private String getUsername(){
+    public String getUsername(){
         return JOptionPane.showInputDialog(
             frame,
             "Input your username:",
@@ -63,22 +62,22 @@ public class Client {
             JOptionPane.PLAIN_MESSAGE);
     }
     
-    private void run() throws IOException{
-        serverAddress = "localhost";
-        clientSocket = new Socket(serverAddress,2222);
+    public void run() throws IOException{
+        serverAddress = getServerAddress();
+        Socket clientSocket = new Socket("localhost",2222);
         inputStream = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         outputStream = new PrintWriter(clientSocket.getOutputStream(), true);
             while(true){
                 String message = inputStream.readLine();
-                if(message.startsWith("SUBMITUSERNAME")){
+                if(message.startsWith("USERNAME")){
                     outputStream.println(getUsername());
-                }else if(message.startsWith("USERNAMEACCEPTED")){
+                }else if(message.startsWith("ACCEPTEDUSERNAME")){
                     messageInput.setEditable(true);
                 }else if(message.startsWith("MESSAGE")){
-                    ReadInput readInput = new ReadInput();
-                    readInput.run();
+                    messageArea.append(message.substring(8) + "\n");
                 }
             }
+ 
        
         
     }
@@ -87,8 +86,10 @@ public class Client {
 
     public static void main(String[] args) throws IOException{
         Client client = new Client();
+        
         client.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         client.frame.setVisible(true);
         client.run(); 
+        
     }
 }

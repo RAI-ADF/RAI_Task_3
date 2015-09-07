@@ -17,16 +17,16 @@ import java.net.Socket;
  * @author Fauzan Razandi
  */
 public class Server {
+    static BufferedReader inputStream;
     public static void main(String[] args){
     int portNumber = 2222;
     Socket clientSocket = null;
+   
     try{
         System.out.println("The Server is Running");
         ServerSocket serverSocket = new ServerSocket(portNumber);
             while(true){
-                clientSocket = serverSocket.accept();
-                ServerThread serverThread = new ServerThread(clientSocket);
-                serverThread.start();         
+                new ServerThread(serverSocket.accept()).start();    
     }}
     catch(IOException e){
         System.out.println("Exception caught when trying to listen on port " + portNumber + " or listening for a connection");

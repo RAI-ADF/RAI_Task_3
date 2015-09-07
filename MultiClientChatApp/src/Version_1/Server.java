@@ -3,6 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
+
 package Version_1;
 
 import java.io.BufferedReader;
@@ -16,6 +18,7 @@ import java.util.Iterator;
 /**
  *
  * @author mickeyMice
+ * Using tutorial on youtube with some change, link :https://www.youtube.com/watch?v=LpzKG5jPzjI by varietytubechan
  */
 public class Server extends javax.swing.JFrame {
 

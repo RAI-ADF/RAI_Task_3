@@ -1,0 +1,54 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package soket;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ *
+ * @author LENOVO
+ */
+public class ReadInput extends Thread{
+   private BufferedReader inputStream;
+   private PrintWriter outputStream;
+    
+    public ReadInput(BufferedReader inputStream){
+        this.inputStream = inputStream;
+    }
+    
+
+    //@Override
+    public void run(PrintWriter outputStream) { 
+        
+        try {
+            //System.out.println("jalan");
+            Client client = new Client();
+//        }
+            String inputan = "";
+            outputStream.println(client.getName());
+            ClientJFrame jFrame = new ClientJFrame();
+            jFrame.setVisible(true);
+            do{
+                
+//                if (inputan.startsWith("Masukan username")) {
+//                outputStream.println(getName());
+////            } else if (inputan.startsWith("Accepted")) {
+////                client.textField.setEditable(true);
+////            } else if (inputan.startsWith("pesan")) {
+////                client.messageArea.append(inputan.substring(8) + "\n");
+//            }
+                System.out.println(inputan);
+                System.out.println(": ");
+            }while((inputan = inputStream.readLine()) != null);
+        } catch (IOException e) {
+        }
+    }
+}

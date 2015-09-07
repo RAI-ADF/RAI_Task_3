@@ -17,6 +17,8 @@ import java.util.HashSet;
  *
  * @author auliamarchita
  */
+
+
 public class ServerThread extends Thread{
     private String clientName = null;
     private DataInputStream is = null;
@@ -40,7 +42,7 @@ public class ServerThread extends Thread{
     try {
       is = new DataInputStream(clientSocket.getInputStream());
       os = new PrintStream(clientSocket.getOutputStream());
-      String name;
+   
       while (true) {
                 os.println("Enter your username : ");
                 name = is.readLine().trim();
@@ -57,58 +59,28 @@ public class ServerThread extends Thread{
                       }
                 }
             }
-      os.println("Welcome " + name + " to the chat room."
-              + "\n'/quit' for leave conversation. \n");
+            os.println("Welcome " + name + " to the chat room." + "\n'quit' for leave conversation. \n");
       
       synchronized (this) {
         for (int i = 0; i < maxClients; i++) {
-          if (threads[i] != null && threads[i] == this) {
-            clientName = "@" + name;
-            break;
-          }
-        }
-        for (int i = 0; i < maxClients; i++) {
           if (threads[i] != null && threads[i] != this) {
-            threads[i].os.println("" + name + " has joined.");
+            threads[i].os.println("" + name + " has joined");
             out.println("" + name + " has joined.");
           }
         }
       }
-
       while (true) {
-        String chat = is.readLine();
-        if (chat.startsWith("/quit")) {
-          break;
-        }
-
-        if (chat.startsWith("@")) {
-          String[] words = chat.split("\\s", 2);
-          if (words.length > 1 && words[1] != null) {
-            words[1] = words[1].trim();
-            if (!words[1].isEmpty()) {
-              synchronized (this) {
-                for (int i = 0; i < maxClients; i++) {
-                  if (threads[i] != null && threads[i] != this
-                      && threads[i].clientName != null
-                      && threads[i].clientName.equals(words[0])) {
-                    threads[i].os.println("<" + name + "> " + words[1]);
-                    this.os.println(">" + name + "> " + words[1]);
+                String chat = is.readLine();
+                if (chat.startsWith("quit")) {
                     break;
-                  }
                 }
-              }
+                for (int i = 0; i < maxClients; i++) {
+                    if (threads[i] != null) {
+                        threads[i].os.println("<" + name + "> : " + chat);
+                    }
+                }
             }
-          }
-        } else {        
-          synchronized (this) {
-            for (int i = 0; i < maxClients; i++) {
-              if (threads[i] != null && threads[i].clientName != null) {
-                threads[i].os.println("<" + name + "> " + chat);
-              }
-            }
-          }
-        }
-      }
+      
       synchronized (this) {
         for (int i = 0; i < maxClients; i++) {
           if (threads[i] != null && threads[i] != this

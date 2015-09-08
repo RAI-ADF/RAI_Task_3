@@ -40,10 +40,10 @@ public class ServerThread extends Thread{
                 }
                 synchronized (users){
                     if (!users.containsKey(username)) {
-                        //outputStream.writeBytes("username has already been used, try another username" + "\n");
                         users.put(username, outputStream);
                         break;
-                    }
+                    } 
+                    outputStream.writeBytes("username has already been used, try another username" + "\n");
                 }
             }
             String inputan, message;

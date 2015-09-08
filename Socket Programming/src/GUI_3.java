@@ -1,6 +1,7 @@
 
 import java.io.PrintWriter;
 import java.net.Socket;
+import javax.swing.JOptionPane;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -119,6 +120,7 @@ public class GUI_3 extends javax.swing.JFrame {
             gui.setVisible(true);
             this.setVisible(false);
         } catch(Exception e){
+            JOptionPane.showMessageDialog(null, "username has been already taken, try another one");
             System.out.println(e.getMessage());
         }
         

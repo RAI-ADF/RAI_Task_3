@@ -44,7 +44,7 @@ public class ServerThread extends Thread{
                         System.out.println("username "+ username +" is connected");
                         break;
                     } 
-                    outputStream.writeBytes("username has already been used, try another username" + "\n");
+                    //outputStream.writeBytes("username has already been used, try another username" + "\n");
                 }
             }
             String inputan, message;

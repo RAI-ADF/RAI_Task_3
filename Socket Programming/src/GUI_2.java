@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import javax.swing.JOptionPane;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -132,6 +133,7 @@ public class GUI_2 extends javax.swing.JFrame {
             gui3.setVisible(true);
             this.setVisible(false);
         } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "ip server invalid");
             System.out.println("exception : " + e);
         }
     }//GEN-LAST:event_OKActionPerformed

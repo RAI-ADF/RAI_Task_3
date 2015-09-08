@@ -22,20 +22,12 @@ public class Server {
         
         try {
             ServerSocket serverSocket = new ServerSocket(portNumber);
-            Socket clientSocket = serverSocket.accept();
             
-            DataOutputStream outStream = new DataOutputStream
-            (clientSocket.getOutputStream());
-            BufferedReader inStream = new BufferedReader
-            (new InputStreamReader(clientSocket.getInputStream()));{
-            
-            System.out.println("just connected with " + clientSocket.getRemoteSocketAddress());
-            String inputLine;
-            while((inputLine = inStream.readLine()) != null) {
-                System.out.println("client says: " + inputLine);
-                outStream.writeBytes("message received " + "\n");
-            }
-        }   clientSocket.close();
+            while (true) {
+                Socket clientSocket = serverSocket.accept();
+                ServerThread serverThread = new ServerThread(clientSocket);
+                serverThread.start();
+            }   
         } catch(IOException e){
             System.out.println("Exception caught when trying to listen on port "+
                     portNumber + " or listening for a connection");

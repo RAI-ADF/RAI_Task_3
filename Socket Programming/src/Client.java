@@ -16,8 +16,7 @@ import java.net.Socket;
  * @author aridakartika
  */
 public class Client {
-    
-    public Client(){
+    public static void main(String[] args) {
         try {
             BufferedReader keyBoard = new BufferedReader(new InputStreamReader(System.in));
             System.out.print("input Ip server : ");
@@ -32,19 +31,17 @@ public class Client {
             
             String inputKeyBoard;
             do {
-                System.out.println(">> ");
+                System.out.print(">> ");
                 inputKeyBoard = keyBoard.readLine();
                 outputStream.println(inputKeyBoard);
                 outputStream.flush();
-                keyBoard.close();
             } while (!inputKeyBoard.equals("quit"));                 
-        
-        } catch (IOException e) {
+            inputStream.close();
+            outputStream.close();
+            connect.close();
+        } 
+        catch (IOException e) {
             System.out.println("exception : " + e);
         }
-        
-        
     }
-  
-    
 }

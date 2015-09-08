@@ -1,3 +1,9 @@
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -13,9 +19,24 @@ public class GUI extends javax.swing.JFrame {
     /**
      * Creates new form GUI
      */
-    public GUI() {
+    Socket connect;
+    BufferedReader br;
+    public GUI(Socket c) {
+        connect = c;
         initComponents();
         this.setLocationRelativeTo(null);
+        try {
+            br =new BufferedReader(new InputStreamReader(connect.getInputStream()));
+            ReadInputs r = new ReadInputs(br);
+            r.start();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        
+    }
+
+    private GUI() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**
@@ -33,6 +54,7 @@ public class GUI extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         layar = new javax.swing.JTextArea();
         inputan = new javax.swing.JTextField();
+        Send = new javax.swing.JButton();
 
         javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
         jFrame1.getContentPane().setLayout(jFrame1Layout);
@@ -53,6 +75,19 @@ public class GUI extends javax.swing.JFrame {
         layar.setRows(5);
         jScrollPane1.setViewportView(layar);
 
+        inputan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inputanActionPerformed(evt);
+            }
+        });
+
+        Send.setText("Send");
+        Send.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SendActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -62,7 +97,10 @@ public class GUI extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
                     .addComponent(jScrollPane1)
-                    .addComponent(inputan))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(inputan)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(Send)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -73,7 +111,9 @@ public class GUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(inputan, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(inputan, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Send))
                 .addContainerGap())
         );
 
@@ -90,6 +130,24 @@ public class GUI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void inputanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputanActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_inputanActionPerformed
+
+    private void SendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SendActionPerformed
+        // TODO add your handling code here:
+        try {
+            String pesan;
+            pesan = inputan.getText();
+            PrintWriter outputStream = new PrintWriter(connect.getOutputStream(),true);
+            outputStream.println(pesan);
+            outputStream.flush();
+            inputan.setText("");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }//GEN-LAST:event_SendActionPerformed
 
     /**
      * @param args the command line arguments
@@ -127,6 +185,7 @@ public class GUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Send;
     private javax.swing.JTextField inputan;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JLabel jLabel1;
@@ -134,4 +193,25 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea layar;
     // End of variables declaration//GEN-END:variables
+
+class ReadInputs extends Thread {
+    private BufferedReader inputStream;
+    
+    public ReadInputs(BufferedReader inputStream) {
+        this.inputStream = inputStream;
+    }
+    
+    @Override
+    public void run(){
+        try {
+            String inputan;
+            while ((inputan = inputStream.readLine()) != null) {
+                layar.append(inputan + "\n");
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }
+}
+

@@ -60,7 +60,11 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jLabel1" pref="380" max="32767" attributes="0"/>
                       <Component id="jScrollPane1" max="32767" attributes="0"/>
-                      <Component id="inputan" alignment="0" max="32767" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="inputan" max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="Send" min="-2" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -74,7 +78,10 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jScrollPane1" min="-2" pref="226" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="inputan" min="-2" pref="24" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="inputan" alignment="3" min="-2" pref="24" max="-2" attributes="0"/>
+                      <Component id="Send" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -102,6 +109,17 @@
           </SubComponents>
         </Container>
         <Component class="javax.swing.JTextField" name="inputan">
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="inputanActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="Send">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Send"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="SendActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

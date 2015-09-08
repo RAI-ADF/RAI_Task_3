@@ -33,7 +33,7 @@ public class ServerThread extends Thread{
             inputStream = new BufferedReader(new InputStreamReader(client.getInputStream()));
             outputStream = new DataOutputStream(client.getOutputStream());
             while (true) {
-                outputStream.writeBytes("submit your username "+ "\n");
+                //outputStream.writeBytes("submit your username "+ "\n");
                 username = inputStream.readLine();
                 if (username == null) {
                     return;
@@ -41,6 +41,7 @@ public class ServerThread extends Thread{
                 synchronized (users){
                     if (!users.containsKey(username)) {
                         users.put(username, outputStream);
+                        System.out.println("username "+ username +" is connected");
                         break;
                     } 
                     outputStream.writeBytes("username has already been used, try another username" + "\n");
@@ -48,7 +49,7 @@ public class ServerThread extends Thread{
             }
             String inputan, message;
             while ((inputan = inputStream.readLine()) != null && !inputan.equals("quit")) {
-                message = username + " said : " + inputan;
+                message = username + " said : " + inputan + "\n";
                 System.out.println(message);
                 for (DataOutputStream d : users.values()) {
                     d.writeBytes(message + "\n");
